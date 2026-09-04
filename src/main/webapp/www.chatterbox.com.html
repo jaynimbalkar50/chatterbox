@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatterBox | Ephemeral Messaging</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+             --accent-blue: #2daae1;
+            --hover-blue: #1e8cb0; 
+            --bg-white: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --error-bg: #fee2e2;
+            --error-text: #b91c1c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-white);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 8%;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .logo:hover { color: var(--accent-blue); }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            margin-left: 30px;
+            transition: 0.3s;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .nav-links a:hover { color: var(--accent-blue); transform: translateY(-2px); }
+
+        .btn-signup-nav {
+            background-color: var(--accent-blue);
+            padding: 12px 30px;
+            border-radius: 30px;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(163, 216, 244, 0.4);
+        }
+        .btn-signup-nav:hover { 
+            background-color: var(--hover-blue); 
+            transform: translateY(-3px) !important;
+            box-shadow: 0 6px 20px rgba(163, 216, 244, 0.6);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 50px 8% 100px;
+            min-height: 80vh;
+        }
+
+        .hero-text { flex: 1; max-width: 550px; }
+        .hero-text h1 { font-size: 3.8rem; line-height: 1.1; margin-bottom: 25px; }
+        
+        /* Paragraph and Button Spacing */
+        .hero-text p { 
+            font-size: 1.2rem; 
+            color: #666; 
+            margin-bottom: 55px; /* Purpusefully increased spacing */
+            line-height: 1.6; 
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            cursor: pointer;
+        }
+        .cta-button:hover {
+            transform: scale(1.08); /* Natural enlargement */
+            background-color: var(--hover-blue);
+            box-shadow: 0 10px 25px rgba(163, 216, 244, 0.5);
+        }
+
+        /* Mascot Image - No rotation */
+        .hero-image { flex: 1; display: flex; justify-content: flex-end; }
+        .hero-image img {
+            max-width: 450px; 
+            height: auto;
+            transition: transform 0.4s ease; /* Smooth scaling */
+            cursor: pointer;
+        }
+        .hero-image img:hover {
+            transform: scale(1.03); /* Just a subtle zoom */
+        }
+
+        /* --- Features Section --- */
+        .features {
+            padding: 100px 8%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            background-color: #fafafa;
+        }
+
+        .feature-card {
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            border: 1px solid #eee;
+            text-align: center;
+        }
+        .feature-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        /* --- Social & Footer --- */
+        .social-links {
+            text-align: center;
+            padding: 30px 0;
+            background: #fff;
+        }
+        .social-links a {
+            color: #ccc;
+            font-size: 24px;
+            margin: 0 15px;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .social-links a:hover {
+            color: var(--accent-blue);
+            transform: translateY(-5px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 968px) {
+            .hero { flex-direction: column; text-align: center; }
+            .hero-image { margin-top: 50px; justify-content: center; }
+            .features { grid-template-columns: 1fr; }
+        }
+
+
+
+
+/* Safety note styling */
+.safety-note {
+    grid-column: 1 / -1; 
+    text-align: center;
+    margin-top: 30px;    
+    font-size: 1.2rem;   
+    color: #999;         
+    font-style: italic;  
+}
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">ChatterBox</div>
+        <div class="nav-links">
+            <a href="chatterbox.html">Login</a>
+            <a href="signup.html" class="btn-signup-nav">Sign up</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>A space that breathes with you.<br></h1>
+		
+            <p>Enjoy a clutter-free experience where your privacy is our priority. We keep things fresh and light, so you can focus on the conversations that truly matter.</p>
+            <a href="signup.html" class="cta-button">Start your story</a>
+        </div>
+        <div class="hero-image">
+            <img src="man.png" alt="ChatterBox Mascot">
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature-card">
+            <h3>Always Fresh</h3>
+            <p>In a world that remembers everything, we choose to forget. No archives, no backups, just a lighter way to stay connected.</p>
+        </div>
+        
+        <div class="feature-card">
+            <h3>Minimalist Vibe</h3>
+            <p>A clean, focused space designed for people who value privacy and simplicity.</p>
+		</div>
+		<div class="feature-card">
+		<h3>Built for fun, governed by safety.</h3>
+		<p>We keep your space clean, but we also keep it safe. Our background protocols ensure that while your dashboard stays fresh, the integrity of our community remains protected.</p>
+        </div>
+    </section>
+
+    <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fas fa-envelope"></i></a>
+    </div>
+
+    <footer>
+        <p> @ChatterBox &bull; 2026 &bull; Made with ❤ love. No strings attached.</p>
+    </footer>
+
+</body>
+</html>

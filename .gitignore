@@ -1,0 +1,47 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Compiled class files
+*.class
+src/main/webapp/WEB-INF/classes/
+
+# IDE files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+
+# Downloaded dependencies (Maven manages these)
+*.jar
+!src/main/webapp/WEB-INF/lib/*.jar
+
+# Tomcat
+apache-tomcat*
+tomcat*/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.desktop
+
+# Logs
+*.log
+
+# Database credentials (security)
+dbconfig.properties
+src/main/webapp/WEB-INF/classes/dbconfig.properties

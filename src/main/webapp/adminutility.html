@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHATTERBOX DATABASE ADMIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020617; --card: rgba(15, 23, 42, 0.9);
+            --accent: #0ea5e9; --cyan: #22d3ee;
+            --text: #f8fafc; --dim: #64748b;
+            --danger: #f43f5e; --success: #10b981;
+        }
+        body {
+            background: var(--bg); color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 30px 30px;
+        }
+        .dashboard-container {
+            width: 95%; max-width: 1100px; background: var(--card);
+            backdrop-filter: blur(15px); border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+        .header {
+            padding: 20px 30px; background: rgba(30, 41, 59, 0.5);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .header h1 { font-size: 1rem; letter-spacing: 2px; margin: 0; }
+        .header h1 span { color: var(--cyan); font-weight: 300; }
+        .main-content { display: grid; grid-template-columns: 320px 1fr; }
+        .control-panel { padding: 30px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .label-title { color: var(--dim); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 20px; }
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
+        .bios-btn {
+            background: rgba(255,255,255,0.03); color: var(--text);
+            border: 1px solid rgba(255,255,255,0.1); padding: 15px;
+            border-radius: 10px; cursor: pointer; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem; text-align: left; transition: 0.3s;
+        }
+        .bios-btn:hover { background: var(--accent); color: var(--bg); transform: translateX(5px); }
+        .btn-exit { border-color: var(--danger); color: var(--danger); margin-top: 20px; }
+        .btn-exit:hover { background: var(--danger); color: white; }
+        .display-area { padding: 30px; background: rgba(0,0,0,0.2); }
+        textarea {
+            width: 100%; height: 380px; background: #000; color: #5eead4;
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+            padding: 15px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+            resize: none; outline: none; box-sizing: border-box;
+        }
+        .status-footer {
+            padding: 15px 30px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--dim); display: flex; justify-content: space-between;
+            background: rgba(15, 23, 42, 1); border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .status-dot { height: 8px; width: 8px; background: var(--success); border-radius: 50%; display: inline-block; margin-right: 8px; box-shadow: 0 0 10px var(--success); }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <div class="header">
+        <h1>CHATTERBOX DB <span>ADMIN</span></h1>
+        <div style="font-size: 0.7rem; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 20px; color: var(--accent);">V.2026.01.STABLE</div>
+    </div>
+
+    <div class="main-content">
+        <div class="control-panel">
+            <span class="label-title">System Commands</span>
+            <div class="btn-group">
+                <button onclick="sendAction('toggleBot')" class="bios-btn">[F1] TOGGLE AUTO-BOT</button>
+                <button onclick="sendAction('fetchData')" class="bios-btn">[F2] FETCH DELETED LOGS</button>
+                <button onclick="sendAction('purgeData')" class="bios-btn">[F3] PURGE DATABASE</button>
+                <button onclick="window.location.href='chatterbox.html'" class="bios-btn btn-exit">[ESC] EXIT SYSTEM</button>
+            </div>
+        </div>
+
+        <div class="display-area">
+            <span class="label-title">Terminal Output</span>
+            <textarea id="logBox" readonly placeholder="Waiting for command..."></textarea>
+            <div style="margin-top: 20px; font-size: 0.8rem; display: flex; align-items: center;">
+                <span class="status-dot"></span> STATUS: <span id="sysStatus" style="margin-left: 10px; color: var(--accent);">READY</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-footer">
+        <div>SYS_AUTH: AUTHORIZED | ENCRYPTION: AES-256</div>
+        <div>DATE: 2026.01.18</div>
+    </div>
+</div>
+
+<script>
+    function sendAction(cmd) {
+        const status = document.getElementById('sysStatus');
+        status.innerText = "PROCESSING...";
+        status.style.color = "#fbbf24";
+        
+        fetch('ControlPanel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'action=' + cmd
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('SERVER ERROR');
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('logBox').value = data;
+            status.innerText = "EXECUTED: " + cmd.toUpperCase();
+            status.style.color = "#22d3ee";
+        })
+        .catch(error => {
+            status.innerText = "ERROR: " + error.message;
+            status.style.color = "#f43f5e";
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatterBox | Live Chat</title>
+    
+    <link rel="stylesheet" id="fa-link" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --accent-blue: #2563eb; 
+            --hover-blue: #1d4ed8;
+            --text-main: #000000;
+            --bg-light: #f8fbfe;
+            --white: #ffffff;
+            --danger: #ef4444;
+            --shadow: 0 10px 30px rgba(163, 216, 244, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            background-image: radial-gradient(circle at top right, #eef7ff, transparent);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Break Overlay --- */
+        #breakOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 2000;
+            flex-direction: column; justify-content: center; align-items: center;
+            color: white; text-align: center; backdrop-filter: blur(8px);
+        }
+
+        /* --- Navigation Adjusted for Mascot --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 5px 8%; background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px); border-bottom: 1px solid rgba(163, 216, 244, 0.3);
+            z-index: 100;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Logo आणि Mascot मधलं अंतर */
+        }
+
+        .logo { font-size: 24px; font-weight: 800; color: #000000 !important; text-decoration: none; }
+
+        /* --- New Mascot Styling (Beside Logo, No Hover) --- */
+        .mascot-box { 
+            width: 120px; /* Mascot ची साईज वाढवली */
+            animation: floatAni 3s ease-in-out infinite;
+        }
+        .mascot-box img { width: 100%; height: auto; display: block; }
+
+        /* Hover effect काढून टाकला आहे */
+        .mascot-box:hover { transform: none !important; }
+
+        @keyframes floatAni { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        /* --- Buttons --- */
+        .icon-btn { 
+            width: 45px; height: 45px; border-radius: 50%; border: none; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            font-size: 1.2rem;
+        }
+
+        .clear-btn { background: #fee2e2; color: #ef4444; }
+        .clear-btn:hover { 
+            background: #fecaca; transform: scale(1.2) rotate(15deg); 
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .send-btn { background: var(--accent-blue); color: white; margin-left: 10px; }
+        .send-btn:hover { 
+            background: var(--hover-blue); transform: scale(1.2) rotate(-10deg);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .exit-link { 
+            display: inline-block; padding: 10px 25px; color: var(--danger); 
+            text-decoration: none; font-size: 0.85rem; font-weight: bold;
+            border: 2px solid #fee2e2; border-radius: 50px; transition: 0.3s;
+        }
+        .exit-link:hover { background: var(--danger); color: white; transform: translateY(-3px); }
+
+        /* --- Chat Layout --- */
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .chat-container {
+            width: 100%; max-width: 850px; height: 70vh;
+            background: var(--white); border-radius: 30px;
+            display: flex; flex-direction: column;
+            box-shadow: var(--shadow); border: 1px solid rgba(163, 216, 244, 0.3);
+            overflow: hidden; position: relative;
+        }
+        #chatLog { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        
+        .message { max-width: 70%; padding: 12px 20px; border-radius: 20px; font-size: 0.95rem; animation: slideUp 0.3s ease-out; }
+        .bot-message { background: #f0f4f8; color: #333; align-self: flex-start; border-bottom-left-radius: 5px; }
+        .user-message { background: var(--accent-blue); color: white; align-self: flex-end; border-bottom-right-radius: 5px; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .input-area { padding: 20px 30px; background: var(--white); border-top: 1px solid #f0f0f0; }
+        .input-wrapper { display: flex; align-items: center; background: #f8fafc; padding: 5px 15px; border-radius: 50px; border: 2px solid transparent; transition: 0.3s; margin-bottom: 12px; position: relative; }
+        .input-wrapper:focus-within { border-color: var(--accent-blue); background: white; }
+        input { flex: 1; border: none; outline: none; background: transparent; padding: 12px; font-size: 1rem; }
+
+        #emojiPicker {
+            display: none; position: absolute; bottom: 70px; left: 10px; 
+            background: white; padding: 10px; border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15); z-index: 1001; 
+            grid-template-columns: repeat(5, 1fr); gap: 10px; border: 1px solid #eee;
+        }
+        #emojiPicker span { cursor: pointer; font-size: 1.4rem; transition: 0.2s; }
+        #emojiPicker span:hover { transform: scale(1.3); }
+    </style>
+</head>
+<body>
+
+    <div id="breakOverlay">
+        <span id="break-icon-box"><i class="fas fa-coffee" style="font-size: 4rem; color: #4ade80;"></i></span>
+        <h2 style="margin-top: 20px;">Break Time! 🍕</h2>
+        <p>Take care of your eyes, friend. <br> Let's take a break.</p>
+        <button style="background:#4ade80; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; margin-top:10px; font-weight:bold;" onclick="closeBreak()">Continue Chatting</button>
+    </div>
+
+    <nav>
+        <div class="logo-container">
+            <a href="#" class="logo" id="logo-text">ChatterBox</a>
+            <div class="mascot-box" title="I am watching you!">
+                <img src="meow.png" alt="Mascot">
+            </div>
+        </div>
+        <button class="icon-btn clear-btn" id="clear-btn" onclick="confirmClear()"><i class="fas fa-trash"></i></button>
+    </nav>
+
+    <main>
+        <section class="chat-container">
+            <div id="chatLog">
+                <div class="message bot-message"><p>Welcome back! Start chatting below. 🚀</p></div>
+            </div>
+
+            <div class="input-area">
+                <form id="chatForm" onsubmit="handleSend(event)">
+                    <div class="input-wrapper">
+                        <button type="button" onclick="toggleEmojiPicker()" style="background:none; border:none; cursor:pointer; font-size:1.3rem;">😊</button>
+                        <input type="text" id="chatInput" placeholder="Type something cool..." autocomplete="off" required>
+                        <button type="submit" class="icon-btn send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+                        <div id="emojiPicker">
+                            <span onclick="addEmoji('🚀')">🚀</span><span onclick="addEmoji('🔥')">🔥</span>
+                            <span onclick="addEmoji('😂')">😂</span><span onclick="addEmoji('👍')">👍</span>
+                            <span onclick="addEmoji('❤️')">❤️</span><span onclick="addEmoji('😎')">😎</span>
+                            <span onclick="addEmoji('✨')">✨</span><span onclick="addEmoji('🎉')">🎉</span>
+                            <span onclick="addEmoji('👀')">👀</span><span onclick="addEmoji('🥱')">🥱</span>
+                            <span onclick="addEmoji('😡')">😡</span><span onclick="addEmoji('😭')">😭</span>
+                        </div>
+                    </div>
+                </form>
+                <center><a href="chatterbox.html" class="exit-link" id="exit-btn"><i class="fas fa-sign-out-alt"></i> LEAVE CONVERSATION</a></center>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let localMsgCount = 0;
+
+        function decodeUTF8(str) {
+            try { return decodeURIComponent(escape(str)); } catch (e) { return str; }
+        }
+
+        function checkIcons() {
+            if (!navigator.onLine) {
+                document.getElementById('logo-text').innerHTML = "💬 ChatterBox";
+                document.getElementById('clear-btn').innerHTML = "🗑️";
+                document.getElementById('send-btn').innerHTML = "🚀";
+                document.getElementById('exit-btn').innerHTML = "🚪 LEAVE";
+                document.getElementById('break-icon-box').innerHTML = "<span style='font-size:5rem'>☕</span>";
+            }
+        }
+
+        function toggleEmojiPicker() {
+            const p = document.getElementById('emojiPicker');
+            p.style.display = (p.style.display === 'grid') ? 'none' : 'grid';
+        }
+
+        function addEmoji(emoji) {
+            const input = document.getElementById('chatInput');
+            input.value += emoji;
+            input.focus();
+            toggleEmojiPicker();
+        }
+
+        function handleSend(event) {
+            event.preventDefault();
+            const input = document.getElementById('chatInput');
+            const msgText = input.value.trim();
+            if (!msgText) return;
+
+		const paramsURL = new URLSearchParams(window.location.search);
+   		 const tid = paramsURL.get('tabId'); // URL madhun ID ghetla
+
+            localMsgCount++;
+            if (localMsgCount % 15 === 0) {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            }
+            const params = new URLSearchParams();
+            params.append('message', msgText);
+		if (tid) params.append('tabId', tid);
+            fetch('ChatServlet', { method: 'POST', body: params }).then(() => {
+                input.value = "";
+                loadMessages();
+            });
+        }
+
+      function loadMessages() {
+    const paramsURL = new URLSearchParams(window.location.search);
+    const tid = paramsURL.get('tabId');
+    
+    
+    fetch(`GetMessagesServlet${tid ? '?tabId='+tid : ''}`)
+    .then(response => response.text())
+    .then(html => {
+        const chatLog = document.getElementById('chatLog');
+        if (html.trim() !== "") { 
+            chatLog.innerHTML = decodeUTF8(html); 
+        }
+        chatLog.scrollTop = chatLog.scrollHeight;
+            });
+        }
+
+       function confirmClear() {
+    const paramsURL = new URLSearchParams(window.location.search);
+    const tid = paramsURL.get('tabId');
+
+    if(confirm("Delete your messages?")) {
+        // URL madhe tabId add kela
+        fetch(`clearChat?tabId=${tid}`).then(response => {
+            if(response.ok) {
+	alert("Your messages have been deleted! ✨");
+                loadMessages();
+            }
+        });
+    }
+}
+
+        setInterval(() => {
+            document.getElementById('breakOverlay').style.display = 'flex';
+        }, 420000);
+
+        function closeBreak() {
+            document.getElementById('breakOverlay').style.display = 'none';
+        }
+
+        setInterval(loadMessages, 2000);
+        window.onload = () => { loadMessages(); checkIcons(); };
+        window.addEventListener('offline', checkIcons);
+        window.addEventListener('online', () => location.reload());
+    </script>
+</body>
+</html>

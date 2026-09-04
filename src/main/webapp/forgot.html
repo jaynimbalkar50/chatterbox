@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ChatterBox - Forgot Password</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Layout Wrapper: Flexbox vaprun mascot ani form baajula kele */
+    .form-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 1000px; /* Width thodi vadhavli jyamule baajula space milel */
+      gap: 50px; /* Mascot ani Form madhli gap */
+    }
+
+    /* Mascot Container */
+    .mascot-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+	margin-top: 60px;
+    }
+
+    .mascot-container img {
+      width: 320px; /* Thoda motha mascot */
+      height: auto;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    /* Fancy Sentence khali */
+    .fancy-text {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #4b5563;
+      font-style: italic;
+      font-weight: 500;
+      max-width: 250px;
+      line-height: 1.4;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    /* Auth Card (Reset Password Form) */
+    .auth-card {
+      background: #ffffff;
+      border-radius: 35px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-header { margin-bottom: 20px; }
+    .brand-name { font-size: 28px; font-weight: 800; color: #000; }
+
+    h2 { font-size: 24px; margin-bottom: 10px; font-weight: 700; color: #111; }
+    .subtitle { font-size: 14px; color: #6b7280; margin-bottom: 30px; line-height: 1.5; }
+
+    /* Inputs */
+    .input-group { margin-bottom: 15px; position: relative; }
+    input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1.5px solid #eee;
+      border-radius: 16px;
+      font-size: 16px;
+      background: #fdfdfd;
+      outline: none;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Submit Button */
+    .btn-reset {
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+    .btn-reset:hover { background-color: #222; }
+
+    .login-footer { 
+      margin-top: 25px; 
+      text-align: center; 
+      font-size: 15px; 
+      color: #6b7280; 
+    }
+
+    .login-link { 
+      color: #3b82f6; 
+      text-decoration: none; 
+      font-weight: 700; 
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    /* Responsive: Mobile var mascot var ani form khali disel */
+    @media (max-width: 850px) {
+      .form-wrapper { flex-direction: column; gap: 20px; }
+      .mascot-container img { width: 180px; }
+      .fancy-text { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-wrapper">
+    
+    <div class="mascot-side">
+      <div class="mascot-container">
+        <img src="box.png" alt="Mascot">
+      </div>
+      <p class="fancy-text">"Even the best of us lose our way... and our passwords! Let's get you back in."</p>
+    </div>
+
+    <div class="auth-card">
+      <div class="brand-header">
+        <span class="brand-name">ChatterBox</span>
+      </div>
+
+      <h2>Forgot Password?</h2>
+      <p class="subtitle">Lost your key? No worries, we've got a spare one waiting for you.</p>
+
+      <form action="ForgotServlet" method="post">
+        <div class="input-group">
+          <input type="email" name="email" placeholder="Registered Email" required>
+        </div>
+
+        <div class="input-group">
+          <input id="newPassword" name="newpass" type="password" placeholder="New Password" required minlength="4">
+          <button type="button" class="toggle-password" id="eyeIcon">👁️</button>
+        </div>
+
+        <button type="submit" class="btn-reset">Reset Password</button>
+      </form>
+
+      <div class="login-footer">
+        Remembered password? <span class="login-link" onclick="window.location.href='chatterbox.html'">Login here</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const passwordInput = document.getElementById('newPassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    eyeIcon.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '🙈' : '👁️';
+    });
+  </script>
+
+</body>
+</html>

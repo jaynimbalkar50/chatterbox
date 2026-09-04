@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ChatterBox - Sign Up</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #333333;
+      --muted: #888888;
+      --blue-light: #bde0fe;
+      --accent-blue: #00a8ff;
+      --border: #e0e0e0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+      max-width: 1000px;
+      padding: 40px;
+      align-items: center;
+    }
+
+    .form-section {
+      flex: 1;
+      padding-right: 50px;
+    }
+
+    .image-section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-section img {
+      max-width: 100%; /* Image thodi lahan keli ahe clarity sathi */
+      height: auto;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .tagline {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 8px 0 30px 0;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 1.5px solid var(--border);
+      background: transparent;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-bottom-color: var(--accent-blue);
+    }
+
+    /* Alignment Fix ithe ahe */
+    .checkbox-container {
+      display: flex;
+      align-items: center; /* Checkbox ani text la center madhe align karel */
+      gap: 8px; /* Doghanmadhe antar */
+      margin: 25px 0;
+      cursor: pointer;
+    }
+
+    .checkbox-container input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-text {
+      font-size: 13px;
+      color: var(--muted);
+      user-select: none; /* Text var click kelyavar select honar nahi */
+    }
+
+    .btn-create {
+      background: var(--blue-light);
+      color: #555;
+      border: none;
+      padding: 12px 35px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-create:hover {
+      background: #a2d2ff;
+    }
+
+    .footer-text {
+      margin-top: 25px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (max-width: 800px) {
+      .container { flex-direction: column; text-align: center; }
+      .image-section { display: none; }
+      .form-section { padding-right: 0; }
+      .checkbox-container { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="form-section">
+      <h1>Join the conversation.<br>Leave no trace.</h1>
+      <p class="tagline">Create your story</p>
+
+      <form id="signupForm" action="RegisterServlet" method="post">
+        <div class="form-group">
+          <label>Full name</label>
+          <input name="fullname" type="text" placeholder="Enter your full name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Username</label>
+          <input name="username" type="text" placeholder="Choose a username" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input name="email" type="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input name="password" type="password" placeholder="Create Password" required>
+        </div>
+
+        <label class="checkbox-container">
+          <input type="checkbox" name="terms" required>
+          <span class="checkbox-text">I agree to the <span style="color: var(--accent-blue);">Terms & Conditions</span></span>
+        </label>
+
+        <button type="submit" class="btn-create">Create Account</button>
+      </form>
+
+      <div class="footer-text">
+        Your messages are ephemeral and<br>
+        vanish after a minutes.
+      </div>
+
+      <a class="back-link" onclick="window.location.href='chatterbox.html'">← Back to Login</a>
+    </div>
+
+    <div class="image-section">
+        <img src="witch.png" alt="Illustration">
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatterBox - Login</title>
+  <style>
+    :root {
+      --primary-blue: #2daae1;
+      --primary-hover: #1e8cb field;
+      --active-text: #2daae1;
+      --text-main: #333333;
+      --text-muted: #666666;
+      --error-bg: #fee2e2;
+      --error-text: #b91c1c;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #ffffff;
+      overflow: hidden; 
+    }
+
+    /* ChatterBox Brand */
+    .brand-header {
+      position: absolute;
+      top: 30px;
+      left: 50px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 20px;
+      color: #000000;
+      z-index: 10;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #000000;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 900;
+    }
+
+    .container {
+      display: flex;
+      width: 90%;
+      max-width: 1100px;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      height: 100vh;
+    }
+
+    /* Form Section */
+    .form-side {
+      flex: 0 0 350px;
+      z-index: 5;
+      margin-left: 80px; 
+    }
+
+    h2 {
+      font-size: 38px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+
+    .error-box {
+      background: var(--error-bg);
+      color: var(--error-text);
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 1px solid #fca5a5;
+      display: none;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eeeeee;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: #bbbbbb;
+      margin-bottom: 4px;
+    }
+
+    .form-group input {
+      width: 100%;
+      border: none;
+      padding: 8px 0;
+      font-size: 16px;
+      outline: none;
+      background: transparent;
+      color: var(--text-main);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+
+    .checkbox { color: #aaaaaa; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .link { color: var(--active-text); font-weight: 600; cursor: pointer; }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      margin-bottom: 10px;
+      transition: 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 12px rgba(174, 223, 247, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #eeeeee;
+      color: var(--text-main);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* IMAGE POSITION & SHADOW FIX */
+    .image-side {
+      position: absolute;
+      right: -20px;
+      top: 0;      
+      width: 60%; 
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .image-side img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      /* Realistic Shadow: X=15px, Y=25px, Blur=35px, Transparency=0.1 */
+      filter: drop-shadow(8px 12px 15px rgba(0, 0, 0, 0.08));
+    }
+
+    @media (max-width: 900px) {
+      .brand-header { left: 20px; }
+      .form-side { margin-left: 0; width: 100%; text-align: center; }
+      .container { flex-direction: column; height: auto; padding-top: 100px; }
+      .image-side { position: static; width: 100%; }
+      .checkbox { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="brand-header">
+    <div class="brand-icon">CB</div> ChatterBox
+  </div>
+
+  <div class="container">
+    <div class="form-side">
+      <h2>What's the gossip today?</h2>
+      <p class="subtitle">Get comfy and dive back into the endless stream of stories.</p>
+
+      <div id="errorBox" class="error-box">❌ Invalid Username or Password</div>
+
+      
+	<form id="loginForm" action="LoginServlet" method="POST">
+        <input type="hidden" name="tabId" id="tabIdField">
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="Enter username" required />
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter password" required minlength="4" />
+        </div>
+        
+        <div class="row">
+          <label class="checkbox"><input type="checkbox" /> Remember me</label>
+          <span class="link" id="forgotLink">Forgot password?</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+        <button type="button" class="btn btn-outline" id="signupBtn">Sign up</button>
+
+        <div class="footer">
+          No account? <span class="link" id="createAccountLink">Create an account</span>
+        </div>
+      </form>
+    </div>
+
+    <div class="image-side">
+      <img src="girl.png" alt="Reference Illustration">
+    </div>
+  </div>
+
+<script>
+    // 1. UNIQUE TAB ID LOGIC (Guest Issue Solution)
+    // Pratyek tab sathi ek unique number generate hoto
+    if (!sessionStorage.getItem('tab_unique_id')) {
+        sessionStorage.setItem('tab_unique_id', 'T' + Date.now() + Math.floor(Math.random() * 1000));
+    }
+    
+    // Form submit honyachya aadhi to ID input field madhe set hoto
+    document.getElementById("tabIdField").value = sessionStorage.getItem('tab_unique_id');
+
+
+    // 2.   BUTTON LOGIC (Redirects)
+    document.getElementById("signupBtn").addEventListener("click", () => { 
+        window.location.href = "signup.html"; 
+    });
+    
+    document.getElementById("createAccountLink").addEventListener("click", () => { 
+        window.location.href = "signup.html"; 
+    });
+    
+    document.getElementById("forgotLink").addEventListener("click", () => { 
+        window.location.href = "forgot.html"; 
+    });
+
+
+    // 3. ERROR HANDLING (Login Fail Case)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+        document.getElementById("errorBox").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
